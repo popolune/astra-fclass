@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>아스트라 아카데미 F반</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@600;900&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* VOICE occasion: a character-select screen for a male-oriented academy sim, loud art, quiet type
+   IDEA a game's character select: portrait roster on top, each heroine a full-screen poster with expression swaps
+   PICTURE the heroine art itself, full-bleed, one poster per heroine that fills exactly one phone screen
+   COLOUR uniform black ground, brass gold, per-heroine accent from her art, dismissal-stamp red
+   TYPE Noto Serif KR 900 huge for names and title, Noto Sans KR for the rest
+   LAYOUT hero poster; sticky roster; six full-screen posters (text bottom-left on phone, left column on desktop); villain flip; closing poster */
+:root{color-scheme:dark;--bg:#09090c;--ink:#f1eee7;--dim:#b4b0a6;--line:rgba(255,255,255,.14);--gold:#d9b25c;--red:#e0402f}
+*{box-sizing:border-box;min-width:0}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 "Noto Sans KR",system-ui,sans-serif;overflow-x:clip;word-break:keep-all;overflow-wrap:anywhere}
+img{display:block;max-width:100%}
+h1,h2,h3{font-family:"Noto Serif KR",serif;font-weight:900;margin:0;line-height:1.02;letter-spacing:-.03em;text-wrap:balance}
+p{margin:0}
+.pad{padding-inline:max(18px,5vw)}
+.poster{position:relative;min-height:100svh;display:grid;align-items:end;isolation:isolate;overflow:hidden}
+.poster>.bg{position:absolute;inset:0;z-index:-2}
+.poster>.bg img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:var(--pos,center 18%);transition:opacity .45s ease}
+.poster::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(9,9,12,0) 38%,rgba(9,9,12,.72) 66%,var(--bg) 100%)}
+.hero h1{font-size:clamp(48px,11vw,128px)}
+.hero h1 em{font-style:normal;color:var(--gold)}
+.hero .copy{padding-bottom:clamp(40px,8vh,90px);display:grid;gap:16px;max-width:900px}
+.stamp{justify-self:start;border:3px solid var(--red);color:var(--red);font-weight:700;font-size:15px;padding:4px 12px;border-radius:4px;transform:rotate(-5deg);background:rgba(9,9,12,.55)}
+.lead{font-size:clamp(18px,2.4vw,24px);font-weight:500}
+.meta{display:flex;flex-wrap:wrap;gap:8px}
+.meta span{border:1px solid var(--line);background:rgba(9,9,12,.6);border-radius:999px;padding:5px 14px;font-size:14px;white-space:nowrap}
+.notice{position:relative;display:grid;gap:18px;padding-block:clamp(56px,10vw,120px);overflow:hidden;isolation:isolate}
+.notice>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;filter:brightness(.28) saturate(.7)}
+.notice::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,var(--bg),transparent 30%,transparent 70%,var(--bg))}
+.notice .paper{max-width:720px;border:1px solid var(--line);background:rgba(9,9,12,.55);backdrop-filter:blur(4px);border-radius:6px;padding:clamp(20px,4vw,36px);display:grid;gap:14px;position:relative}
+.paper small{color:var(--dim);font-size:13px}
+.paper h2{font-size:clamp(26px,4.6vw,44px);line-height:1.2}
+.paper h2 b{color:var(--red)}
+.paper p{color:var(--dim);font-size:16px}
+.paper .seal{position:absolute;right:clamp(10px,3vw,28px);top:-30px;background:rgba(9,9,12,.7);border:3px double var(--red);color:var(--red);border-radius:50%;width:76px;height:76px;display:grid;place-items:center;font-weight:700;font-size:14px;transform:rotate(-12deg);opacity:.85}
+.dday{font-family:"Noto Serif KR",serif;font-weight:900;font-size:clamp(64px,13vw,150px);line-height:.9;color:transparent;-webkit-text-stroke:1.5px var(--gold)}
+.roster{position:sticky;top:0;z-index:30;background:rgba(9,9,12,.82);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.roster .in{display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;padding:10px max(18px,5vw)}
+.roster a{flex:none;display:grid;justify-items:center;gap:4px;text-decoration:none;color:var(--dim);font-size:12px;font-weight:500}
+.roster a span{width:50px;height:50px;border-radius:50%;overflow:hidden;border:2px solid var(--line);transition:border-color .2s,transform .2s}
+.roster a img{width:100%;height:100%;object-fit:cover;object-position:var(--face,50% 14%);transform:scale(1.9);transform-origin:var(--face,50% 14%)}
+.roster a.on{color:var(--ink)}
+.roster a.on span{border-color:var(--acc);transform:scale(1.08)}
+.hero-girl{scroll-margin-top:70px}
+.hero-girl .copy{padding-bottom:clamp(28px,6vh,64px);display:grid;gap:12px;max-width:620px}
+.tag{justify-self:start;font-size:13px;font-weight:700;padding:3px 10px;border-radius:3px;background:var(--band);color:#0b0b0e}
+.hero-girl h2{font-size:clamp(46px,9vw,96px);text-shadow:0 2px 30px rgba(0,0,0,.6)}
+.hero-girl h2 span{display:block;font-family:"Noto Sans KR",sans-serif;font-weight:500;font-size:15px;letter-spacing:0;color:var(--dim);margin-top:8px;text-shadow:none}
+.quote{font-family:"Noto Serif KR",serif;font-weight:600;font-size:clamp(18px,2.4vw,23px);line-height:1.5;border-left:3px solid var(--acc);padding-left:14px}
+.kw{display:flex;flex-wrap:wrap;gap:6px}
+.kw span{font-size:13px;padding:3px 11px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid var(--line)}
+.faces{display:flex;gap:8px;flex-wrap:wrap}
+.faces button{font:500 14px "Noto Sans KR",sans-serif;color:var(--ink);background:rgba(9,9,12,.6);border:1px solid var(--line);border-radius:999px;padding:0 16px;min-height:40px;cursor:pointer;transition:background .2s,border-color .2s}
+.faces button[aria-pressed=true]{background:var(--acc);border-color:var(--acc);color:#0b0b0e;font-weight:700}
+.faces button:hover,.faces button:focus-visible{border-color:var(--ink);outline:none}
+.villain{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:clamp(20px,4vw,56px);align-items:center;padding-block:clamp(64px,10vw,120px)}
+.villain h2{font-size:clamp(36px,6vw,64px)}
+.villain p{color:var(--dim);margin-top:14px;font-size:17px;max-width:30em}
+.villain p b{color:var(--ink)}
+.flip{position:relative;margin:0;aspect-ratio:4/3;border-radius:6px;overflow:hidden;cursor:pointer;border:1px solid var(--line);background:#000}
+.flip img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity .6s,transform 6s}
+.flip .back{opacity:0}
+.flip.on .back{opacity:1}
+.flip.on .front{transform:scale(1.06)}
+.flip figcaption{position:absolute;left:12px;bottom:12px;background:rgba(9,9,12,.85);font-size:14px;padding:6px 12px;border-radius:4px}
+.flip:focus-visible{outline:2px solid var(--red);outline-offset:3px}
+.end .copy{padding-bottom:clamp(48px,10vh,110px);display:grid;gap:14px}
+.end h2{font-size:clamp(40px,8vw,92px)}
+.end p{font-size:clamp(17px,2.2vw,21px);color:var(--dim)}
+.tags{display:flex;flex-wrap:wrap;gap:6px 12px;color:var(--gold);font-size:14px}
+@media(min-width:901px){
+.poster::after{background:linear-gradient(90deg,var(--bg) 0%,rgba(9,9,12,.82) 30%,rgba(9,9,12,0) 62%),linear-gradient(180deg,transparent 70%,var(--bg))}
+.poster>.bg img{object-position:var(--dpos,70% 18%)}
+.hero-girl{align-items:center}
+.hero-girl .copy{padding-bottom:0}
+.roster .in{justify-content:center}
+}
+@media(max-width:900px){.villain{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:600px){
+.hero-girl{min-height:calc(100svh - 75px)}
+.roster a span{width:44px;height:44px}
+.hero-girl h2{font-size:clamp(42px,13vw,60px)}
+.quote{font-size:17px}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<header class="poster hero" style="--pos:50% 26%;--dpos:50% 26%">
+<div class="bg"><img src="img/6/7.jpg" alt="F반 히로인 셋과 담임 이자벨"></div>
+<div class="copy pad">
+<div class="stamp">해체 예정 학급</div>
+<h1>아스트라<br>아카데미 <em>F반</em></h1>
+<p class="lead">지면 전원 퇴학, 꼴찌반 반장의 하렘 역전극</p>
+<div class="meta"><span>📷 일반이미지 185</span><span>♀️ 6</span><span>♂️ 1</span></div>
+</div>
+</header>
+
+<section class="notice pad">
+<img src="img/8/0.jpg" alt="">
+<div class="dday">D-147</div>
+<div class="paper">
+<small>게시판 공문 · 교감 로덴</small>
+<h2>학기말 반대항전 <b>최하위 학급은 해체</b>하며, 소속 학생 전원을 퇴학 처리한다.</h2>
+<p>입학 첫날 떠맡은 F반 반장. 문제아뿐인 반을 한 팀으로 묶어 꼴찌를 탈출해야 한다.</p>
+<div class="seal">교감인</div>
+</div>
+</section>
+
+<nav class="roster" aria-label="히로인"><div class="in" id="roster"></div></nav>
+<main id="girls"></main>
+
+<section class="villain pad">
+<div>
+<h2>그런데 이 해체,<br>정말 성적 때문일까</h2>
+<p>언제나 온화한 교감 로덴. <b>3년 전에도 F반 하나가 해체됐고</b>, 그때 퇴학당한 학생들의 행방은 아무도 모른다.</p>
+</div>
+<figure class="flip" id="flip" tabindex="0" role="button" aria-pressed="false" aria-label="교감의 다른 얼굴 보기">
+<img class="front" src="img/7/0.jpg" alt="온화하게 웃는 교감 로덴">
+<img class="back" src="img/7/1.jpg" alt="차갑게 웃는 교감 로덴">
+<figcaption id="flipCap">눌러서 다른 얼굴 보기</figcaption>
+</figure>
+</section>
+
+<footer class="poster end" style="--pos:50% 30%;--dpos:50% 30%">
+<div class="bg"><img src="img/6/3.jpg" alt="반대항전에서 승리한 F반"></div>
+<div class="copy pad">
+<h2>꼴찌반을 살릴<br>반장은 당신</h2>
+<p>반대항전까지 147일. 첫 조회 종이 울렸다.</p>
+<div class="tags"><span>#아카데미</span><span>#하렘</span><span>#남성향</span><span>#성장물</span><span>#사이다</span></div>
+</div>
+</footer>
+
+<script>
+{
+const G=[
+{n:"리리아 벨로트",s:"리리아",t:"F반",band:"#a3a8b2",acc:"#ef5a43",r:"20 · F반 · 불량 격투가",face:"52% 16%",pos:"50% 15%",dpos:"62% 15%",
+q:"야, 반장. 약속했지? 끝까지 같이 싸우는 거다.",kw:["다혈질","의리파","주먹부터"],f:[[0,"기본"],[8,"웃음"],[6,"분노"],[18,"수줍음"]]},
+{n:"노엘 크레센트",s:"노엘",t:"F반",band:"#a3a8b2",acc:"#b495f0",r:"20 · F반 · 학년 최대 마력",face:"50% 14%",pos:"50% 14%",dpos:"64% 14%",
+q:"저, 저기… 이번엔 안 터질게요. 지켜봐 주실래요?",kw:["소심","마력 폭주","책벌레"],f:[[0,"기본"],[1,"미소"],[5,"폭주"],[18,"수줍음"]]},
+{n:"세라핀 듀발",s:"세라핀",t:"F반",band:"#a3a8b2",acc:"#4ccfc8",r:"20 · F반 · 몰락한 귀족 영애",face:"50% 16%",pos:"50% 15%",dpos:"64% 15%",
+q:"착각하지 마세요. 반의 품위를 지킨 것뿐이에요.",kw:["이론 1위","비밀 알바","츤데레"],f:[[0,"기본"],[1,"비웃음"],[4,"몰래 알바"],[18,"수줍음"]]},
+{n:"아리아 레인하르트",s:"아리아",t:"A반 수석",band:"#d9b25c",acc:"#e0402f",r:"20 · A반 반장 · 공작가 영애",face:"50% 14%",pos:"50% 13%",dpos:"64% 13%",
+q:"F반 반장. 다음 모의전, 제가 직접 상대해 드리죠.",kw:["냉미녀","라이벌","완벽주의"],f:[[0,"기본"],[1,"차가운 시선"],[5,"결투"],[18,"수줍음"]]},
+{n:"미아 토르벤",s:"미아",t:"B반 에이스",band:"#d4d8de",acc:"#f283b6",r:"20 · B반 · 평민 장학생 정보상",face:"50% 16%",pos:"50% 15%",dpos:"62% 15%",
+q:"에이~ 이 정보? 반장한테만 특별히 싸게 줄게.",kw:["장난꾸러기","이중거래","쌍단검"],f:[[0,"기본"],[1,"윙크"],[6,"째려보기"],[18,"수줍음"]]},
+{n:"이자벨 크로우",s:"이자벨",t:"담임교관",band:"#7f9bdc",acc:"#8eaaf0",r:"28 · F반 담임 · 전 궁정마도사",face:"50% 14%",pos:"50% 14%",dpos:"64% 14%",
+q:"…귀찮게. 그래도 내 반 애들은 내가 지킨다.",kw:["무기력","혼술","진짜 실력"],f:[[0,"기본"],[1,"안경"],[9,"혼술"],[18,"수줍음"]]}
+];
+document.getElementById('roster').innerHTML=G.map((g,i)=>`<a href="#g${i}" style="--acc:${g.acc};--face:${g.face}"><span><img src="img/${i}/0.jpg" alt=""></span>${g.s}</a>`).join('');
+document.getElementById('girls').innerHTML=G.map((g,i)=>`<section class="poster hero-girl" id="g${i}" style="--acc:${g.acc};--band:${g.band};--pos:${g.pos};--dpos:${g.dpos}">
+<div class="bg">${g.f.map((f,j)=>`<img src="img/${i}/${f[0]}.jpg" alt="${g.n} ${f[1]}" ${j?'loading="lazy" style="opacity:0"':''} data-k="${j}">`).join('')}</div>
+<div class="copy pad">
+<span class="tag">${g.t}</span>
+<h2>${g.n}<span>${g.r}</span></h2>
+<p class="quote">"${g.q}"</p>
+<div class="kw">${g.kw.map(k=>`<span>${k}</span>`).join('')}</div>
+<div class="faces" role="group" aria-label="${g.s} 표정">${g.f.map((f,j)=>`<button type="button" data-g="${i}" data-k="${j}" aria-pressed="${!j}">${f[1]}</button>`).join('')}</div>
+</div></section>`).join('');
+
+document.getElementById('girls').addEventListener('click',e=>{
+const b=e.target.closest('button[data-g]');if(!b)return;
+const sec=document.getElementById('g'+b.dataset.g),k=b.dataset.k;
+sec.querySelectorAll('.bg img').forEach(im=>im.style.opacity=im.dataset.k===k?1:0);
+b.parentElement.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));
+});
+
+const links=[...document.querySelectorAll('.roster a')];
+const io=new IntersectionObserver(es=>{es.forEach(en=>{if(en.isIntersecting){const id=en.target.id;links.forEach(a=>{const on=a.getAttribute('href')==='#'+id;a.classList.toggle('on',on);if(on){const c=a.parentElement;c.scrollTo({left:a.offsetLeft-c.clientWidth/2+a.clientWidth/2,behavior:'smooth'})}})}})},{rootMargin:'-45% 0px -45% 0px'});
+document.querySelectorAll('.hero-girl').forEach(s=>io.observe(s));
+
+const flip=document.getElementById('flip'),cap=document.getElementById('flipCap');
+const tg=()=>{const on=flip.classList.toggle('on');flip.setAttribute('aria-pressed',on);cap.textContent=on?'다시 누르면 원래 얼굴로':'눌러서 다른 얼굴 보기'};
+flip.addEventListener('click',tg);
+flip.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();tg()}});
+}
+</script>
+</body>
+</html>
